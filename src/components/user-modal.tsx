@@ -35,6 +35,7 @@ export default function UserModal({
 
   const [user, setUser] = useState(existingUser || EMPTY_USER);
   const [error, setError] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
 
   // reset modal state on open
   useEffect(() => {
@@ -45,12 +46,14 @@ export default function UserModal({
   }, [existingUser, isOpen]);
 
   const saveUser = async () => {
+    setIsSaving(true);
     const response = await saveUserAction(user);
     if (!response.success) {
       setError(response.message);
     } else {
       onClose();
     }
+    setIsSaving(false);
   };
 
   return (
@@ -99,7 +102,7 @@ export default function UserModal({
         </ModalBody>
 
         <ModalFooter>
-          <Button colorScheme="blue" onClick={saveUser}>
+          <Button colorScheme="blue" onClick={saveUser} isLoading={isSaving}>
             Save
           </Button>
         </ModalFooter>
